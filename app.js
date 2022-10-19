@@ -3,18 +3,14 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
+const { limiter } = require('./utils/limiter');
+const router = require('./routes/main-routes');
 const cors = require('./middlewares/cors');
-const { auth } = require('./middlewares/auth');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { login, createUser } = require('./controllers/users');
 
-const { userSchemaValidate, loginValidate } = require('./utils/validation');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
-
-const NotFoundError = require('./utils/errors/not-found-404');
 
 const app = express();
 
@@ -27,13 +23,6 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 
 app.use(cors);
 
-const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
 app.use(requestLogger);
 app.use(limiter);
 
@@ -43,17 +32,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', loginValidate, login);
-app.post('/signup', userSchemaValidate, createUser);
-
-app.use(auth);
-
-app.use('/users', require('./routes/users'));
-app.use('/movies', require('./routes/movies'));
-
-app.use('/', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
-});
+app.use(router);
 
 app.use(errorLogger);
 

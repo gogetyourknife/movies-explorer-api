@@ -40,9 +40,9 @@ module.exports.createMovie = (req, res, next) => {
     trailerLink,
     thumbnail,
     movieId,
+    owner,
     nameRU,
     nameEN,
-    owner,
   })
     .then((movie) => res.send(movie))
     .catch((err) => {
