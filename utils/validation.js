@@ -57,5 +57,5 @@ module.exports = {
   userIdSchemaValidate,
   profileSchemaValidate,
   movieSchemaValidate,
-  movieDeleteSchemaValidate
+  movieDeleteSchemaValidate,
 };

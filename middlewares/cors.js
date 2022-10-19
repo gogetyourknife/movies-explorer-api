@@ -5,7 +5,7 @@ const allowedCors = [
   'https://api.best-movies.nomoredomains.icu',
   'http://api.best-movies.nomoredomains.icu',
   'http://best-movies.nomoredomains.icu',
-  'https://api.nomoreparties.co/beatfilm-movies'
+  'https://api.nomoreparties.co/beatfilm-movies',
 ];
 
 module.exports = (req, res, next) => {
