@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const regex = require('../utils/regex');
+const { regex } = require('../utils/regex');
 
 const {
   WRONG_LINK,
@@ -32,7 +32,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => RegExp(regex).test(v),
+      validator: (v) => regex.test(v),
       message: WRONG_LINK,
     },
   },
@@ -40,7 +40,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => RegExp(regex).test(v),
+      validator: (v) => regex.test(v),
       message: WRONG_LINK,
     },
   },
@@ -48,7 +48,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => RegExp(regex).test(v),
+      validator: (v) => regex.test(v),
       message: WRONG_LINK,
     },
   },
