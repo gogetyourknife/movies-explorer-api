@@ -4,50 +4,38 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-const { limiter } = require('./utils/limiter');
-const router = require('./routes/main-routes');
+const helmet = require('helmet');
+const crash = require('./middlewares/crash-test');
+const { devDatabase } = require('./middlewares/mongoose');
+const { limiter } = require('./middlewares/limiter');
+const router = require('./routes/index');
+const errorHandler = require('./middlewares/error-handler');
 const cors = require('./middlewares/cors');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV, DATABASE_PROD } = process.env;
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
-  useNewUrlParser: true,
-});
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_PROD : devDatabase);
 
 app.use(cors);
 
 app.use(requestLogger);
 app.use(limiter);
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+app.get(crash);
 
+app.use(helmet());
 app.use(router);
 
 app.use(errorLogger);
+app.use(errorHandler);
 
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'Внутренняя ошибка сервера'
-        : message,
-    });
-  next();
-});
 
 app.listen(PORT);

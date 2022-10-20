@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
 
+const {
+  WRONG_EMAIL,
+} = require('../utils/errors/error-names');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -14,7 +18,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (v) => isEmail(v),
-      message: 'Некорректный адрес почты',
+      message: WRONG_EMAIL,
     },
   },
   password: {

@@ -7,6 +7,17 @@ const UnauthorizedError = require('../utils/errors/unauthorized-401');
 const NotFoundError = require('../utils/errors/not-found-404');
 const ConflictError = require('../utils/errors/conflict-409');
 
+const {
+  BAD_REQUEST,
+  WRONG_DATA_USER,
+  NOT_FOUND_USER,
+  CONFLICT_ERROR,
+  ERROR_CODE_DUPLICATE,
+  ALREADY_EXISTS_EMAIL,
+} = require('../utils/errors/error-names');
+
+const devJWT = 'some-secret-key';
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.login = (req, res, next) => {
@@ -14,12 +25,12 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError('Некорректные почта или пароль');
+        throw new UnauthorizedError(WRONG_DATA_USER);
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new UnauthorizedError('Некорректные почта или пароль');
+            throw new UnauthorizedError(WRONG_DATA_USER);
           }
           return user;
         });
@@ -27,7 +38,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+        NODE_ENV === 'production' ? JWT_SECRET : devJWT,
         { expiresIn: '7d' },
       );
       res.send({ token });
@@ -39,14 +50,14 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(NOT_FOUND_USER);
       } else {
         res.send(user);
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
+        next(new BadRequestError(BAD_REQUEST));
       } else {
         next(err);
       }
@@ -66,10 +77,10 @@ module.exports.createUser = (req, res, next) => {
       name: user.name,
     }))
     .catch((err) => {
-      if (err.code === 11000) {
-        next(new ConflictError('Попробуйте другой email'));
+      if (err.code === ERROR_CODE_DUPLICATE) {
+        next(new ConflictError(CONFLICT_ERROR));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректный запрос'));
+        next(new BadRequestError(BAD_REQUEST));
       } else {
         next(err);
       }
@@ -86,7 +97,9 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректный запрос'));
+        next(new BadRequestError(BAD_REQUEST));
+      } else if (err.code === ERROR_CODE_DUPLICATE) {
+        next(new ConflictError(ALREADY_EXISTS_EMAIL));
       } else {
         next(err);
       }

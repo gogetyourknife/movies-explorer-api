@@ -12,20 +12,14 @@ const userSchemaValidate = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-    name: Joi.string().min(2).max(30),
-  }),
-});
-
-const userIdSchemaValidate = celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
+    name: Joi.string().min(2).max(30).required(),
   }),
 });
 
 const profileSchemaValidate = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
+    name: Joi.string().min(2).max(30).required(),
   }),
 });
 
@@ -39,10 +33,9 @@ const movieSchemaValidate = celebrate({
     image: Joi.string().required().pattern(new RegExp(regex)),
     trailerLink: Joi.string().required().pattern(new RegExp(regex)),
     thumbnail: Joi.string().required().pattern(new RegExp(regex)),
-    owner: Joi.string().required(),
-    movieId: Joi.string().required(),
-    nameRU: Joi.number().required(),
-    nameEN: Joi.number().required(),
+    movieId: Joi.number().required(),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
   }),
 });
 
@@ -55,7 +48,6 @@ const movieDeleteSchemaValidate = celebrate({
 module.exports = {
   loginValidate,
   userSchemaValidate,
-  userIdSchemaValidate,
   profileSchemaValidate,
   movieSchemaValidate,
   movieDeleteSchemaValidate,

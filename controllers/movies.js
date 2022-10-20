@@ -4,12 +4,15 @@ const BadRequestError = require('../utils/errors/bad-request-400');
 const ForbiddenError = require('../utils/errors/forbidden-403');
 const NotFoundError = require('../utils/errors/not-found-404');
 
+const {
+  BAD_REQUEST,
+  NOT_FOUND_FILM,
+  ACCESS_ERROR_FILM,
+} = require('../utils/errors/error-names');
+
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
     .then((movie) => {
-      if (!movie) {
-        throw new NotFoundError('Фильм не найден');
-      }
       res.send(movie);
     })
     .catch(next);
@@ -47,7 +50,7 @@ module.exports.createMovie = (req, res, next) => {
     .then((movie) => res.send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректный запрос'));
+        next(new BadRequestError(BAD_REQUEST));
       } else {
         next(err);
       }
@@ -60,10 +63,10 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Фильм не найден');
+        throw new NotFoundError(NOT_FOUND_FILM);
       }
       if (owner !== movie.owner.toString()) {
-        throw new ForbiddenError('У вас нет прав на удаление фильма');
+        throw new ForbiddenError(ACCESS_ERROR_FILM);
       } else {
         return Movie.deleteOne(movie)
           .then(() => {
@@ -73,7 +76,7 @@ module.exports.deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Некорректный запрос'));
+        next(new BadRequestError(BAD_REQUEST));
       } else {
         next(err);
       }

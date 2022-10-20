@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const regex = require('../utils/regex');
 
+const {
+  WRONG_LINK,
+} = require('../utils/errors/error-names');
+
 const { ObjectId } = mongoose.Schema;
 
 const movieSchema = new mongoose.Schema({
@@ -29,7 +33,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => RegExp(regex).test(v),
-      message: 'Некорретный адрес ссылки',
+      message: WRONG_LINK,
     },
   },
   trailerLink: {
@@ -37,7 +41,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => RegExp(regex).test(v),
-      message: 'Некорретный адрес ссылки',
+      message: WRONG_LINK,
     },
   },
   thumbnail: {
@@ -45,7 +49,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => RegExp(regex).test(v),
-      message: 'Некорретный адрес ссылки',
+      message: WRONG_LINK,
     },
   },
   owner: {
@@ -54,7 +58,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   movieId: {
-    type: ObjectId,
+    type: Number,
     required: true,
   },
   nameRU: {

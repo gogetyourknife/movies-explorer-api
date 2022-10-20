@@ -9,6 +9,9 @@ const {
 } = require('../controllers/users');
 const { auth } = require('../middlewares/auth');
 const NotFoundError = require('../utils/errors/not-found-404');
+const {
+  NOT_FOUND_LINK,
+} = require('../utils/errors/error-names');
 
 router.post('/signin', loginValidate, login);
 router.post('/signup', userSchemaValidate, createUser);
@@ -19,7 +22,7 @@ router.use('/users', userRouter);
 router.use('/movies', movieRouter);
 
 router.use('/', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый ресурс не найден'));
+  next(new NotFoundError(NOT_FOUND_LINK));
 });
 
 module.exports = router;
