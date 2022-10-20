@@ -4,7 +4,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-const helmet = require('helmet');
 const crash = require('./middlewares/crash-test');
 const { devDatabase } = require('./middlewares/mongoose');
 const { limiter } = require('./middlewares/limiter');
@@ -29,8 +28,6 @@ app.use(requestLogger);
 app.use(limiter);
 
 app.get(crash);
-
-app.use(helmet());
 app.use(router);
 
 app.use(errorLogger);
