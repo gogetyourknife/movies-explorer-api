@@ -5,13 +5,6 @@ const {
   MOVIE_SCHEMA_ERROR_HANDLER,
 } = require('./errors/error-names');
 
-/* const validationUrl = (value, helpers) => {
-  if (isURL(value)) {
-    return value;
-  }
-  return helpers.message(WRONG_LINK);
-}; */
-
 const loginValidate = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
