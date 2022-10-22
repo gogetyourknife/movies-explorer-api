@@ -33,8 +33,7 @@ app.get(crash);
 app.use(router);
 
 app.use(errorLogger);
-app.use(errorHandler);
 
 app.use(errors());
-
+app.use(errorHandler);
 app.listen(PORT);

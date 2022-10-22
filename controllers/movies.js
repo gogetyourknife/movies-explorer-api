@@ -48,14 +48,8 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((movie) => res.send(movie))
     .catch((err) => {
-      console.log(err);
-      console(err);
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError(BAD_REQUEST));
-        console.log(err);
-        console.log(err.name);
-        console(err);
-        console(err.name);
       }
       return next(err);
     });
