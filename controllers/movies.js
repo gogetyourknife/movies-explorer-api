@@ -19,7 +19,6 @@ module.exports.getMovies = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const owner = req.user._id;
   const {
     country,
     director,
@@ -43,17 +42,22 @@ module.exports.createMovie = (req, res, next) => {
     trailerLink,
     thumbnail,
     movieId,
-    owner,
+    owner: req.user._id,
     nameRU,
     nameEN,
   })
     .then((movie) => res.send(movie))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      console.log(err);
+      console(err);
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError(BAD_REQUEST));
-      } else {
-        next(err);
+        console.log(err);
+        console.log(err.name);
+        console(err);
+        console(err.name);
       }
+      return next(err);
     });
 };
 

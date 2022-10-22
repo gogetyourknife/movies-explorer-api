@@ -7,7 +7,7 @@ const { errors } = require('celebrate');
 const crash = require('./middlewares/crash-test');
 const { devDatabase } = require('./middlewares/mongoose');
 const { limiter } = require('./middlewares/limiter');
-const router = require('./routes/index');
+const router = require('./routes');
 const errorHandler = require('./middlewares/error-handler');
 const cors = require('./middlewares/cors');
 
@@ -20,7 +20,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(NODE_ENV === 'production' ? DATABASE_PROD : devDatabase);
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_PROD : devDatabase, {
+  useNewUrlParser: true,
+});
 
 app.use(cors);
 

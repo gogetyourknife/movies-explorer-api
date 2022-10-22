@@ -19,6 +19,25 @@ const UNAUTHORIZED_ERROR = 'Необходимо авторизоваться в
 const INTERNAL_SERVER_ERROR = 'Внутренняя ошибка сервера';
 const ALREADY_EXISTS_EMAIL = 'Попробуйте другую почту';
 
+const MOVIE_SCHEMA_ERROR_HANDLER = {
+  COUNTRY: 'Поле "страна" обязательно для заполнения',
+  DIRECTOR: 'Поле "режиссер" обязательно для заполнения',
+  DURATION: 'Поле "длительность" обязательно для заполнения',
+  YEAR: 'Поле "год" обязательно для заполнения',
+  DESCRIPTION: 'Поле "описание" обязательно для заполнения',
+  IMAGE: 'Поле "картинка" обязательно для заполнения в формате URL-ссылки',
+  TRAILER_LINK: 'Поле "трейлер" обязательно для заполнения в формате URL-ссылки',
+  THUMBNAIL:
+    'Поле "миниатюра" обязательно для заполнения в формате URL-ссылки',
+  MOVIE_ID:
+    ' Поле "ID" - обязательное поле',
+  NAME_RU:
+    'Поле "наименование на русском" обязательно для заполнения',
+  NAME_EN:
+    ' Поле "наименованеи на английском" обязательно для заполнения',
+  ERROR_URL: 'Неправильный формат ссылки',
+};
+
 module.exports = {
   ERROR_CODE_DUPLICATE,
   ERROR_CODE_BAD_REQUEST,
@@ -39,4 +58,5 @@ module.exports = {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND_LINK,
   ALREADY_EXISTS_EMAIL,
+  MOVIE_SCHEMA_ERROR_HANDLER,
 };
