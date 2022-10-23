@@ -11,7 +11,7 @@ const {
 } = require('../utils/errors/error-names');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movie) => {
       res.send(movie);
     })
